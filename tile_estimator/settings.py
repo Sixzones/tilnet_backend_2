@@ -367,6 +367,7 @@ ALLOWED_HOSTS = [
     "*.railway.app",  # Railway domains
     "*.up.railway.app",  # Railway domains
     "web-production-c1b96.up.railway.app",  # Your specific Railway domain
+    "healthcheck.railway.app",  # Railway healthcheck service
 ]
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'
