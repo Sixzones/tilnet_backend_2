@@ -10,6 +10,14 @@ source /app/venv/bin/activate
 export PORT=${PORT:-8000}
 echo "Using PORT: $PORT"
 
+# Railway sets PORT dynamically, let's make sure it's available
+if [ -z "$PORT" ]; then
+    export PORT=8000
+    echo "PORT not set, using default: $PORT"
+else
+    echo "PORT is set to: $PORT"
+fi
+
 # Run database migrations
 echo "Running database migrations..."
 python manage.py migrate --noinput

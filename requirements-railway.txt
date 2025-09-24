@@ -19,7 +19,8 @@ gunicorn==23.0.0
 # Static files
 whitenoise==6.9.0
 
-# PDF Generation (simplified)
+# PDF Generation
+weasyprint==65.1
 fpdf==1.7.2
 pillow==11.1.0
 

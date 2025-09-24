@@ -6,16 +6,16 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 
-# Install system dependencies
+# Install system dependencies including WeasyPrint dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libffi-dev \
     pkg-config \
-    libcairo2 \
-    libpango-1.0-0 \
+    libcairo2-dev \
+    libpango1.0-dev \
     libpangocairo-1.0-0 \
-    libgdk-pixbuf-2.0-0 \
-    libglib2.0-0 \
+    libgdk-pixbuf-2.0-dev \
+    libglib2.0-dev \
     gtk-update-icon-cache \
     python3-venv \
     postgresql-client \
@@ -29,6 +29,8 @@ RUN apt-get update && apt-get install -y \
     libharfbuzz-dev \
     libfribidi-dev \
     libxcb1-dev \
+    libfontconfig1-dev \
+    libxrender1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

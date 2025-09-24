@@ -9,13 +9,7 @@ from django.db.models import Sum # Only needed if doing sums in view, not serial
 from django.http import HttpResponse # To return the PDF as a response (if not Base64)
 from django.template.loader import render_to_string # To render the HTML template
 from django.conf import settings # To access template settings
-# Import WeasyPrint (optional - may not be available in production)
-try:
-    from weasyprint import HTML
-    WEASYPRINT_AVAILABLE = True
-except ImportError:
-    WEASYPRINT_AVAILABLE = False
-    HTML = None
+from weasyprint import HTML # Import WeasyPrint
 import base64 # For Base64 encoding/decoding
 from django.shortcuts import get_object_or_404 # Helper function
 from django.contrib.auth import get_user_model # To get the user model
