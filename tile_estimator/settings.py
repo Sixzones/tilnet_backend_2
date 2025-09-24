@@ -236,6 +236,8 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 CSRF_TRUSTED_ORIGINS = [
     "https://tilenet.onrender.com",
+    "https://*.railway.app",
+    "https://*.up.railway.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",
@@ -301,14 +303,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tile_estimator.wsgi.application'
 
-DATABASES = {}
-
-# Directly setting the database using a hardcoded URL from Render
-DATABASES["default"] = dj_database_url.parse(
-    "postgresql://postgres:HwdCnuWZklkEWApRIhzZjcJMHOhOCMPT@mainline.proxy.rlwy.net:30544/railway",
-    conn_max_age=600,
-    conn_health_checks=True
-)
+# Database configuration
+DATABASES = {
+    'default': dj_database_url.parse(
+        os.getenv('DATABASE_URL', 'postgresql://postgres:HwdCnuWZklkEWApRIhzZjcJMHOhOCMPT@mainline.proxy.rlwy.net:30544/railway'),
+        conn_max_age=600,
+        conn_health_checks=True
+    )
+}
 # Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -349,7 +351,9 @@ SIMPLE_JWT = {
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "tilenet.onrender.com",  # 👈 Add this line
+    "tilenet.onrender.com",
+    "*.railway.app",  # Railway domains
+    "*.up.railway.app",  # Railway domains
 ]
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'

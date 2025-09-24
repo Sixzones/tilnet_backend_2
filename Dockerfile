@@ -1,7 +1,12 @@
-# Use more secure base image
-FROM python:3.13-slim
+# Use Python 3.11 for better compatibility
+FROM python:3.11-slim
 
-# Install WeasyPrint dependencies and system libraries
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8000
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libffi-dev \
@@ -13,25 +18,35 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     gtk-update-icon-cache \
     python3-venv \
+    postgresql-client \
+    curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy code
-COPY . .
+# Copy requirements first for better caching
+COPY requirements.txt .
 
-RUN python3.13 -m venv /app/venv && \
+# Create virtual environment and install dependencies
+RUN python3.11 -m venv /app/venv && \
     . /app/venv/bin/activate && \
     pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Expose app port
-EXPOSE 8000
-RUN . /app/venv/bin/activate && python manage.py collectstatic --noinput
+# Copy project files
+COPY . .
 
+# Make startup script executable
+RUN chmod +x start.sh
 
-# 
+# Expose port
+EXPOSE $PORT
 
-CMD ["/app/venv/bin/gunicorn", "tile_estimator.wsgi:application", "--bind", "0.0.0.0:8000", "--log-level", "debug", "--error-logfile", "-", "--access-logfile", "-"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:$PORT/ || exit 1
+
+# Run the application using startup script
+CMD ["./start.sh"]
