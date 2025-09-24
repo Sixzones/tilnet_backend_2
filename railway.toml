@@ -1,0 +1,25 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+runtime = "V2"
+numReplicas = 1
+startCommand = "./start-simple.sh"
+sleepApplication = false
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+healthcheckPath = "/"
+healthcheckTimeout = 300
+
+[env]
+DEBUG = "false"
+CORS_ALLOW_ALL_ORIGINS = "true"
+SECRET_KEY = "your-super-secret-key-change-this-in-production"
+DATABASE_URL = "postgresql://postgres:HwdCnuWZklkEWApRIhzZjcJMHOhOCMPT@mainline.proxy.rlwy.net:30544/railway"
+PAYSTACK_SECRET_KEY = ""
+PAYSTACK_PUBLIC_KEY = ""
+PAYSTACK_CALLBACK_URL = ""
+AFRICASTALKING_USERNAME = "sandbox"
+AFRICASTALKING_API_KEY = ""
+VERIFICATION_CODE_EXPIRY_MINUTES = "10"
