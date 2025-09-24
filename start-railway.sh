@@ -18,16 +18,33 @@ python manage.py migrate --noinput
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
+# Test database connection before proceeding
+echo "Testing database connection..."
+python manage.py shell -c "
+from django.db import connection
+try:
+    connection.ensure_connection()
+    print('✅ Database connection successful')
+except Exception as e:
+    print(f'❌ Database connection failed: {e}')
+    print('Continuing without database operations...')
+" || echo "Database connection test failed, continuing..."
+
 # Create superuser if it doesn't exist (optional)
 echo "Checking for superuser..."
 python manage.py shell -c "
+from django.db import connection
 from django.contrib.auth import get_user_model
-User = get_user_model()
-if not User.objects.filter(is_superuser=True).exists():
-    print('No superuser found. Please create one manually.')
-else:
-    print('Superuser exists.')
-"
+try:
+    connection.ensure_connection()
+    User = get_user_model()
+    if not User.objects.filter(is_superuser=True).exists():
+        print('No superuser found. Please create one manually.')
+    else:
+        print('Superuser exists.')
+except Exception as e:
+    print(f'Cannot check superuser due to database error: {e}')
+" || echo "Superuser check failed, continuing..."
 
 # Start the application
 echo "Starting Gunicorn server on port $PORT..."
