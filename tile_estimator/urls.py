@@ -31,7 +31,9 @@ def debug_info(request):
             "PORT": os.environ.get('PORT', 'Not set'),
             "DATABASE_URL": "Set" if os.environ.get('DATABASE_URL') else "Not set",
             "SECRET_KEY": "Set" if os.environ.get('SECRET_KEY') else "Not set",
-        }
+        },
+        "database_config": str(settings.DATABASES['default']),
+        "installed_apps": settings.INSTALLED_APPS,
     }
     
     # Test database connection
@@ -53,10 +55,15 @@ def debug_info(request):
     from django.http import JsonResponse
     return JsonResponse(debug_info)
 
+def simple_test(request):
+    """Simple test endpoint that doesn't require database"""
+    return HttpResponse("Simple test endpoint works!")
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', health_check),
     path('debug/', debug_info),  # Debug endpoint
+    path('test/', simple_test),  # Simple test endpoint
     path('api/admin/', include('admin_api.urls')),
     path('api/user/', include('accounts.urls')),
     path('api/estimates/', include('estimates.urls')),
