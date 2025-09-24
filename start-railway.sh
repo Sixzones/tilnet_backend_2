@@ -20,11 +20,11 @@ fi
 
 # Run database migrations
 echo "Running database migrations..."
-python manage.py migrate --noinput
+python manage.py migrate --noinput || echo "Migration failed, continuing..."
 
 # Collect static files
 echo "Collecting static files..."
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput || echo "Static files collection failed, continuing..."
 
 # Test database connection before proceeding
 echo "Testing database connection..."
@@ -54,6 +54,10 @@ except Exception as e:
     print(f'Cannot check superuser due to database error: {e}')
 " || echo "Superuser check failed, continuing..."
 
+# Test Django app startup
+echo "Testing Django app startup..."
+python manage.py check --deploy || echo "Django check failed, but continuing..."
+
 # Start the application
 echo "Starting Gunicorn server on port $PORT..."
 exec gunicorn tile_estimator.wsgi:application \
@@ -62,4 +66,5 @@ exec gunicorn tile_estimator.wsgi:application \
     --error-logfile - \
     --access-logfile - \
     --workers 2 \
-    --timeout 120
+    --timeout 120 \
+    --preload
