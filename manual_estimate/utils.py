@@ -4,7 +4,13 @@ import io
 import os
 from django.template.loader import render_to_string
 from django.conf import settings
-from weasyprint import HTML
+# Import WeasyPrint (optional - may not be available in production)
+try:
+    from weasyprint import HTML
+    WEASYPRINT_AVAILABLE = True
+except ImportError:
+    WEASYPRINT_AVAILABLE = False
+    HTML = None
 import random
 import base64
 from decimal import Decimal
@@ -128,6 +134,14 @@ def generate_estimate_pdf_base64(estimate_instance, request_user, request=None):
 
 
         print("Attempting to generate PDF from HTML using WeasyPrint...")
+        
+        # Check if WeasyPrint is available
+        if not WEASYPRINT_AVAILABLE:
+            print("WeasyPrint not available, returning HTML as fallback...")
+            # Return HTML as base64 instead of PDF
+            html_base64 = base64.b64encode(html_string.encode('utf-8')).decode('utf-8')
+            return html_base64
+        
         # Generate PDF from HTML using WeasyPrint
         pdf_file = HTML(string=html_string, base_url=template_context['base_url']).write_pdf()
         print("PDF file generated successfully.")
