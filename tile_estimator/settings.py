@@ -238,6 +238,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://tilenet.onrender.com",
     "https://*.railway.app",
     "https://*.up.railway.app",
+    "https://web-production-c1b96.up.railway.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",
@@ -304,13 +305,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'tile_estimator.wsgi.application'
 
 # Database configuration
-DATABASES = {
-    'default': dj_database_url.parse(
-        os.getenv('DATABASE_URL', 'postgresql://postgres:HwdCnuWZklkEWApRIhzZjcJMHOhOCMPT@mainline.proxy.rlwy.net:30544/railway'),
-        conn_max_age=600,
-        conn_health_checks=True
-    )
-}
+# Use Railway database if DATABASE_URL is set, otherwise use local SQLite
+if os.getenv('DATABASE_URL'):
+    # Production/Railway database
+    DATABASES = {
+        'default': dj_database_url.parse(
+            os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True
+        )
+    }
+else:
+    # Local development database (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 # Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -354,6 +366,7 @@ ALLOWED_HOSTS = [
     "tilenet.onrender.com",
     "*.railway.app",  # Railway domains
     "*.up.railway.app",  # Railway domains
+    "web-production-c1b96.up.railway.app",  # Your specific Railway domain
 ]
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'
