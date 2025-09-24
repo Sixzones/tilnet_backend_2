@@ -47,15 +47,15 @@ RUN python3.11 -m venv /app/venv && \
 # Copy project files
 COPY . .
 
-# Make startup script executable
-RUN chmod +x start.sh
+# Make startup scripts executable
+RUN chmod +x start.sh start-railway.sh
 
-# Expose port
-EXPOSE $PORT
+# Expose port (Railway will set this dynamically)
+EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:$PORT/ || exit 1
+    CMD curl -f http://localhost:8000/ || exit 1
 
-# Run the application using startup script
-CMD ["./start.sh"]
+# Run the application using Railway startup script
+CMD ["./start-railway.sh"]

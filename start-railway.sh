@@ -6,6 +6,10 @@ echo "Starting Tilnet Django Backend..."
 # Activate virtual environment
 source /app/venv/bin/activate
 
+# Set default port if not provided
+export PORT=${PORT:-8000}
+echo "Using PORT: $PORT"
+
 # Run database migrations
 echo "Running database migrations..."
 python manage.py migrate --noinput
@@ -26,10 +30,9 @@ else:
 "
 
 # Start the application
-echo "Starting Gunicorn server..."
-echo "Using PORT: ${PORT:-8000}"
+echo "Starting Gunicorn server on port $PORT..."
 exec gunicorn tile_estimator.wsgi:application \
-    --bind 0.0.0.0:${PORT:-8000} \
+    --bind 0.0.0.0:$PORT \
     --log-level info \
     --error-logfile - \
     --access-logfile - \
