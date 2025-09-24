@@ -1,3 +1,4 @@
+# Railway-optimized requirements without WeasyPrint
 # Core Django
 Django==5.1.3
 djangorestframework==3.16.0
@@ -18,10 +19,9 @@ gunicorn==23.0.0
 # Static files
 whitenoise==6.9.0
 
-# PDF Generation
+# PDF Generation (simplified)
 fpdf==1.7.2
 pillow==11.1.0
-# weasyprint==65.1  # Temporarily disabled due to build issues
 
 # Phone numbers
 phonenumbers==9.0.5
@@ -41,23 +41,13 @@ africastalking==1.2.9
 
 # Utilities
 asgiref==3.8.1
-Brotli==1.1.0
 certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.1
-cssselect2==0.8.0
-fonttools==4.58.0
 idna==3.10
 packaging==25.0
 pycparser==2.22
-pydyf==0.11.0
-pyphen==0.17.2
-schema==0.7.7
 sqlparse==0.5.1
-tinycss2==1.4.0
-tinyhtml5==2.0.0
 typing_extensions==4.13.0
 tzdata==2024.2
 urllib3==2.3.0
-webencodings==0.5.1
-zopfli==0.2.3.post1
